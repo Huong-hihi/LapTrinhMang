@@ -1,12 +1,10 @@
-1|EASY|Câu hỏi 1|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|A
-2|NORMAL|Câu hỏi 2|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|B
-3|HARD|Câu hỏi 3|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|C
-4|EASY|Câu hỏi 4|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|D
-5|EASY|Câu hỏi 5|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|A
-6|EASY|Câu hỏi 6|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|B
-7|NORMAL|Câu hỏi 7|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|C
-8|HARD|Câu hỏi 8|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|D
-9|EASY|Câu hỏi 1|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|A
-10|NORMAL|Câu hỏi 2|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|B
-11|HARD|Câu hỏi 3|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|C
-12|EASY|Câu hỏi 4|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|D
+1|EASY|Câu hỏi 1 :Nước Việt Nam có bao nhiêu dân tộc ?|A.54|B.55|C.56|D.53|A
+2|NORMAL|Câu hỏi 1:Đặc sản của Hải Dương là gì?|A.Bánh đậu xanh|B.Vải Thiều|C.Bánh gai|D.Cả 3 đáp án trên|D
+3|HARD|Câu hỏi 1:Thủ đô của Nhật Bản là gì?|A.hokkaido|B.okinawa|C.tokyo|D.Đáp án kyoto|C
+4|EASY|Câu hỏi 2:Thủ đô của Việt Nam là gì?|A.Hải Dương|B.Nam Định|C.Vĩnh Phúc|D.Hà Nội|D
+5|HARD|Câu hỏi 2: 1 +1 = ?|A.1|B.2|C.3|D.4|B
+6|EASY|Câu hỏi 3:Việt Nam có bao nhiêu tỉnh (tp)|A.63|B.64|C.60|D.74|B
+7|NORMAL|Câu hỏi 2:"Bạch Đầu Quân" là tên gọi của lực lượng dân quân nào trong kháng chiến chống Mỹ|A.Các Cụ Già|B.Thanh Niên|C.Nhi Đồng|D.Phụ Nữ|A
+8|HARD|Câu hỏi 3:Đại Tướng đầu tiên của Việt Nam là ai ?|A.Hồ Chí Minh|B.Nguyễn Trãi|C.Khúc Thừa Dụ|D.Võ Nguyên Giáp|D
+9|EASY|Câu hỏi 4:Bác Hồ ra đi tìm đường cứu nước năm nào ?|A.1911|B.1919|C.1920|D.1913|A
+10|NORMAL|Câu hỏi 3:Ai được mệnh danh là "Bà chúa thơ Nôm"|A.Hồ Xuân Hương|B.Bà Huyện Thanh Quang|C.Xuân Diệu|D.Tố Hữu|B

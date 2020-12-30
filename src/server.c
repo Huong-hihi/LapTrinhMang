@@ -15,14 +15,14 @@
 #include "../libs/question.h"
 #include "../libs/gameplay.h"
 
-#define BACKLOG 3 /* Number of allowed connections */
+#define BACKLOG 3 /* Số người trong 1 game */
 
 #define BUFF_SIZE 1024
 Account **head;
 Question **headQuestion;
 Help **headHelp;
 /*
-load data from file account.txt
+đọc dữ liệu từ file account.txt
 input: account.txt
 output: Account **head;
 */
@@ -51,6 +51,7 @@ int loadDataBase()
 intput: Account **head
 output: account.txt
 */
+
 void exportDataToFile()
 {
     FILE *fout;
@@ -111,37 +112,37 @@ int main(int argc, char const *argv[])
         if (checkPort(argv[1]) == 1)
         {
             members = loadDataBase();
-            //Step 1: Construct a TCP socket to listen connection request
+            //B1: Xây dựng một socket TCP để lắng nghe yêu cầu kết nối
             if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-            { /* calls socket() */
+            { /* gọi socket */
                 perror("\nError: ");
                 return 0;
             }
 
-            //Step 2: Bind address to socket
+            //B 2: Liên kết địa chỉ với socket
             bzero(&servaddr, sizeof(servaddr));
             servaddr.sin_family = AF_INET;
             servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
             servaddr.sin_port = htons(atoi(argv[1]));
 
             if (bind(listenfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) == -1)
-            { /* calls bind() */
+            { 
                 perror("\nError: ");
                 return 0;
             }
 
-            //Step 3: Listen request from client
+            //B 3: Lắng nghe yêu cầu từ client
             if (listen(listenfd, BACKLOG) == -1)
-            { /* calls listen() */
+            { 
                 perror("\nError: ");
                 return 0;
             }
 
-            maxfd = listenfd; /* initialize */
+            maxfd = listenfd; //khởi tạo 
             maxi = -1;        /* index into client[] array */
             for (i = 0; i < FD_SETSIZE; i++)
             {
-                client[i] = -1; /* -1 indicates available entry */
+                client[i] = -1; // cho biết mục nhập có sẵn 
                 status[i] = NOT_LOGGED_IN;
                 gamePlayStatus[i] = UNAUTH;
                 account[i] = NULL;
@@ -151,10 +152,10 @@ int main(int argc, char const *argv[])
             FD_ZERO(&allset);
             FD_SET(listenfd, &allset);
 
-            //Step 4: Communicate with clients
+            //B4: Giao tiếp với các client
             while (1)
             {
-                readfds = allset; /* structure assignment */
+                readfds = allset; // phân công nhiệm vụ
                 nready = select(maxfd + 1, &readfds, NULL, NULL, NULL);
                 if (nready < 0)
                 {
@@ -163,17 +164,17 @@ int main(int argc, char const *argv[])
                 }
 
                 if (FD_ISSET(listenfd, &readfds))
-                { /* new client connection */
+                { /* người dùng mới kết nối  */ 
                     clilen = sizeof(cliaddr);
                     if ((connfd = accept(listenfd, (struct sockaddr *)&cliaddr, &clilen)) < 0)
                         perror("\nError: ");
                     else
                     {
-                        printf("Có một kết nối từ %s\n", inet_ntoa(cliaddr.sin_addr)); /* prints client's IP */
+                        printf("Có một kết nối từ %s\n", inet_ntoa(cliaddr.sin_addr)); 
                         for (i = 0; i < FD_SETSIZE; i++)
                             if (client[i] < 0)
                             {
-                                client[i] = connfd; /* save descriptor */
+                                client[i] = connfd; /* lưu */
                                 break;
                             }
                         if (i == FD_SETSIZE)
@@ -196,18 +197,17 @@ int main(int argc, char const *argv[])
                 {
                     if (countMemberOnline(head, numberPlayerArray) == BACKLOG && positionLuckyPlayer == 0)
                     {
-                        //get lucky member
+                        //lấy người chơi may mắn
                         positionLuckyPlayer = randomNumberInArray(numberPlayerArray, BACKLOG);
                         luckyPlayer = findUserNameAccountByPosition(head, positionLuckyPlayer);
                         //init question
                         readQuestionFromFile(headQuestion);
-                        //init hint
                         readHelpFromFile(headHelp);
                         gameStatus = GAME_PLAYING;
                     }
                 }
                 for (i = 0; i <= maxi; i++)
-                { /* check all clients for data */
+                { /* Kiểm tra dữ liệu của tất cả khách hàng */
                     if ((sockfd = client[i]) < 0)
                         continue;
                     if (FD_ISSET(sockfd, &readfds))
@@ -218,7 +218,7 @@ int main(int argc, char const *argv[])
                             FD_CLR(sockfd, &allset);
                             close(sockfd);
                             client[i] = -1;
-                            printf("\nKết nối đã bị đóng!!\n");
+                            printf("\nMột kết nối đã bị đóng!!\n");
                         }
                         else
                         {
@@ -551,7 +551,7 @@ int main(int argc, char const *argv[])
                                         if (hint != NULL) //hint is exist
                                         {
                                             hint->score = playerScore * hint->value;
-                                            printf("\nscore: %f", hint->score);
+                                            //printf("\nscore: %f", hint->score);
                                             response->code = USER_USED_HINT_SUCCESS;
                                             setMessageResponse(response);
                                             gamePlayStatus[i] = WAITING_QUESTION;

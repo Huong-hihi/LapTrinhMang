@@ -4,20 +4,20 @@ int receiveRequest(int socket, Request *buff, int size, int flags)
 {
   int n;
 
-  n = recv(socket, buff, size, flags); // hàm nhận vào Nhận dữ liệu từ SOCKET 
+  n = recv(socket, buff, size, flags);                                                          // nhận vào Nhận dữ liệu từ SOCKET 
   if (n < 0)
-    perror("Error: ");//Thất bại: Trả về:SOCKET_ERROR
-  return n;//Thành công: Trả về:kích thước dữ liệu đã nhận (byte)
+    perror("Error: ");                                                                                //Thất bại: Trả về:SOCKET_ERROR
+  return n;                                                                                       //Thành công: Trả về:kích thước dữ liệu đã nhận (byte)
 }
 
 int sendRequest(int socket, Request *buff, int size, int flags)
 {
   int n;
 
-  n = send(socket, buff, size, flags);//Gửi dữ liệu ra SOCKET
+  n = send(socket, buff, size, flags);                                                            //Gửi dữ liệu ra SOCKET
   if (n < 0)
-    perror("Error: ");//Thất bại: SOCKET_ERROR
-  return n;//Thành công: kích thước dữ liệu đã gửi đi (byte)
+    perror("Error: ");                                                                      //Thất bại: SOCKET_ERROR
+  return n;                                                                         //Thành công: kích thước dữ liệu đã gửi đi (byte)
 }
 
 int sendResponse(int socket, Response *msg, int size, int flags)
@@ -72,7 +72,7 @@ void setMessageResponse(Response *msg)
       strcpy(msg->message, "Mật khẩu sai. Tài khoản đã bị chặn ");
       break;
     case LOGOUT_SUCCESS:
-      strcpy(msg->message, "Đăng xuất thành công ");
+      strcpy(msg->message, "Bạn đã thoát khỏi game ");
       break;
     case REGISTER_SUCCESSFULL:
       strcpy(msg->message, "Đăng ký thành công");

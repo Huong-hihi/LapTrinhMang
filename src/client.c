@@ -4,14 +4,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string.h>
-//5000 : là cổng mà serve lắng nghe
-//127.0.0.1 : địa chỉ local của máy 
 #include "../libs/protocol.h"
 #include "../libs/tool.h"
 #include "../libs/valid.h"
 
 #define BUFF_SIZE 1024
-// login tutorial
+// Hướng dẫn đăng nhập
 void loginTutorial()
 {
     printf("-------------------Đấu trường 100-------------------\n");
@@ -23,8 +21,7 @@ void loginTutorial()
     printf("\n\tĐăng Ký: REGISTER ten_dang_nhap mat_khau");
     printf("\n-------------------Đấu trường 100-------------------");
     printf("\nVui Lòng Nhập Lựa Chọn Của Bạn: \n");
-}
-//gameplay for normal client
+}//hiển thị cho người chơi 
 void gamePlayForNormalTutorial()
 {
     printf("-------------------Đấu trường 100-------------------\n");
@@ -32,7 +29,6 @@ void gamePlayForNormalTutorial()
     printf("\n-------------------Đấu trường 100-------------------");
     printf("\nVui Lòng Nhập Lựa Chọn Của Bạn: \n");
 }
-// tutorial choose topic
 void chooseTopicLevel()
 {
     printf("-------------------Đấu trường 100-------------------\n");
@@ -40,7 +36,7 @@ void chooseTopicLevel()
     printf("\n--------------------------------------------------");
     printf("\nVui Lòng Nhập Lựa Chọn Của Bạn: \n");
 }
-//game play for special player
+//hiển thị cho người chơi chính
 void gamePlayForSpecialTutorial()
 {
     printf("-------------------Đấu trường 100-------------------\n");
@@ -81,18 +77,19 @@ int main(int argc, char const *argv[])
     else
     {
         //Check input : IP address & Port
+        //Kiểm tra đầu vào : địa chỉ IP và cổng
         if (checkIPAndPort(argv[1], argv[2]) != 0)
         {
-            //Step 1: Construct socket
+            //B1: xây dựng socket
             client_sock = socket(AF_INET, SOCK_STREAM, 0);
 
-            //Step 2: Specify server address
+            //B2: Xác định địa chỉ server
             servPort = atoi(argv[2]);
 
             server_addr.sin_family = AF_INET;
             server_addr.sin_port = htons(servPort);
             server_addr.sin_addr.s_addr = inet_addr(argv[1]);
-            //Step 3: Request to connect server
+            //B3: Yêu cầu kết nối với server
             if (connect(client_sock, (struct sockaddr *)&server_addr, sizeof(struct sockaddr)) < 0)
             {
                 printf("\nLỗi không thể kết nối với sever,  người dùng đã thoát  ");
@@ -103,14 +100,14 @@ int main(int argc, char const *argv[])
                 switch (status)
                 {
                 case UNAUTH:
-                    //send request
+                    //Gửi yêu cầu
                     loginTutorial();
                     memset(buff, '\0', (strlen(buff) + 1));
                     fgets(buff, BUFF_SIZE, stdin);
                     buff[strlen(buff) - 1] = '\0';
                     setOpcodeRequest(request, buff);
                     sendRequest(client_sock, request, sizeof(Request), 0);
-                    //recv request
+                    //Nhận yêu cầu
                     receiveResponse(client_sock, response, sizeof(Response), 0);
                     readMessageResponse(response);
                     status = response->status;
@@ -121,13 +118,13 @@ int main(int argc, char const *argv[])
                     }
                     break;
                 case WAITING_PLAYER:
-                    //send request
+                    //Gửi yêu cầu 
                     requestGet(client_sock);
                     receiveResponse(client_sock, response, sizeof(Response), 0);
                     status = response->status;
                     if (status == WAITING_QUESTION)
                     {
-                        //read message
+                        //Đoc message
                         readMessageResponse(response);
                         memset(luckyPlayer, '\0', (strlen(luckyPlayer) + 1));
                         strcpy(luckyPlayer, response->data);
@@ -143,9 +140,9 @@ int main(int argc, char const *argv[])
                     {
                         if (inforamation == FALSE)
                         {
-                            //request get information of game
+                            //Yêu cầu lấy thông tin game
                             requestCheckInformation(client_sock);
-                            //recv information of game
+                            //Nhận thông tin của game
                             receiveInformation(client_sock, infor, sizeof(Information), 0);
                             if (infor->status == TRUE)
                             {
@@ -172,7 +169,7 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-                            //request check status of game: PLAYING or END
+                            //Kiểm tra trạng thái của game là sẽ tiếp tục hay kết thúc
                             requestGet(client_sock);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             inforamation = FALSE;
@@ -183,14 +180,14 @@ int main(int argc, char const *argv[])
                             }
                             else
                             {
-                                //Choose topic
+                                //Chọn mức độ khó của câu hỏi
                                 chooseTopicLevel();
                                 memset(buff, '\0', (strlen(buff) + 1));
                                 fgets(buff, BUFF_SIZE, stdin);
                                 buff[strlen(buff) - 1] = '\0';
                                 setOpcodeRequest(request, buff);
                                 sendRequest(client_sock, request, sizeof(Request), 0);
-                                //recv response
+                                //Nhận phản hồi
                                 receiveResponse(client_sock, response, sizeof(Response), 0);
                                 status = response->status;
                                 if (status == PLAYING)
@@ -208,7 +205,7 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        //check status of game: playing or end?
+                        //Kiểm tra trạng thái của game 
                         requestGet(client_sock);
                         receiveResponse(client_sock, response, sizeof(Response), 0);
                         if (response->status == END_GAME)
@@ -218,7 +215,7 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-                            //rcv response from ser
+                            //rNhận phản hồi từ server
                             requestGet(client_sock);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
@@ -263,20 +260,20 @@ int main(int argc, char const *argv[])
 
                             status = response->status;
                             readMessageResponse(response);
-                            if (status == WAITING_QUESTION) // error validate
+                            if (status == WAITING_QUESTION) // Lỗi
                             {
                                 existQuestion = FALSE;
                             }
-                            if (response->code == USER_USED_HINT_SUCCESS) //use hint
+                            if (response->code == USER_USED_HINT_SUCCESS) //Sử dụng trợ giúp
                             {    
                                 help = TRUE;
                             }
                         }
                         else
                         {
-                            //request get question
+                            //Yêu cầu lấy câu hỏi 
                             requestGet(client_sock);
-                            //rcv question
+                            //Nhận câu hỏi
                             receiveQuestion(client_sock, ques, sizeof(Question), 0);
                             existQuestion = TRUE;
                             questionNumber++;
@@ -291,13 +288,13 @@ int main(int argc, char const *argv[])
                             showQuestion(ques);
                             printf("\nCâu trả lời: \n");
                             gamePlayForNormalTutorial();
-                            //send answer
+                            //Gửi đáp án 
                             memset(buff, '\0', (strlen(buff) + 1));
                             fgets(buff, BUFF_SIZE, stdin);
                             buff[strlen(buff) - 1] = '\0';
                             setOpcodeRequest(request, buff);
                             sendRequest(client_sock, request, sizeof(Request), 0);
-                            //recv response
+                            //Nhận phản hồi
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
                             if (status == WAITING_QUESTION)
@@ -309,9 +306,7 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-                            //request get question
                             requestGet(client_sock);
-                            //recv question
                             receiveQuestion(client_sock, ques, sizeof(Question), 0);
                             existQuestion = TRUE;
                             questionNumber++;
@@ -323,7 +318,7 @@ int main(int argc, char const *argv[])
                     {
                         if (inforamation == FALSE)
                         {
-                            //get result
+                            //lấy kết quả
                             requestCheckInformation(client_sock);
                             receiveInformation(client_sock, infor, sizeof(Information), 0);
                             if (infor->status == TRUE)
@@ -334,7 +329,7 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-                            //request logout
+                            //yêu cầu thoát game
                             requestLogout(client_sock, username);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
@@ -347,14 +342,14 @@ int main(int argc, char const *argv[])
                         if (inforamation == TRUE)
                         {
                             inforamation = FALSE;
-                            // get information
+                            // lấy thông tin
                             requestCheckInformation(client_sock);
                             receiveInformation(client_sock, infor, sizeof(Information), 0);
                             printf("Số điểm bạn nhận được là: %1.f\n", infor->score);
                         }
                         else
                         {
-                            //request logout
+                            //Yêu cầu thoát game
                             requestLogout(client_sock, username);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
@@ -367,7 +362,7 @@ int main(int argc, char const *argv[])
                 if (gameStatus == GAME_END)
                     break;
             }
-            //Step 5: Close socket
+            //B5: đóng socket
             close(client_sock);
             return 0;
         }
